@@ -9,58 +9,62 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-          950: '#082f49',
+        // Instagram-inspired color palette
+        ig: {
+          black: '#000000',
+          dark: '#121212',
+          surface: '#1a1a1a',
+          card: '#262626',
+          border: '#363636',
+          'border-light': '#dbdbdb',
+          text: '#fafafa',
+          'text-secondary': '#a8a8a8',
+          link: '#e0f1ff',
         },
-        secondary: {
-          50: '#faf5ff',
-          100: '#f3e8ff',
-          200: '#e9d5ff',
-          300: '#d8b4fe',
-          400: '#c084fc',
-          500: '#a855f7',
-          600: '#9333ea',
-          700: '#7e22ce',
-          800: '#6b21a8',
-          900: '#581c87',
-          950: '#3b0764',
+        // Instagram gradient colors
+        gradient: {
+          pink: '#E1306C',
+          purple: '#833AB4',
+          orange: '#F77737',
+          yellow: '#FCAF45',
+          magenta: '#C13584',
+          red: '#F56040',
         },
-        accent: {
-          cyan: '#06b6d4',
-          emerald: '#10b981',
-          violet: '#8b5cf6',
-          fuchsia: '#d946ef',
-          amber: '#f59e0b',
+        // Action colors
+        action: {
+          like: '#ed4956',
+          save: '#fafafa',
+          verified: '#0095f6',
+          blue: '#0095f6',
+        },
+        // Category colors (vibrant for dark mode)
+        category: {
+          food: '#22c55e',
+          transport: '#3b82f6',
+          entertainment: '#a855f7',
+          shopping: '#f59e0b',
+          bills: '#ef4444',
+          health: '#ec4899',
+          other: '#6b7280',
         },
       },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-primary': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        'gradient-success': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        'gradient-info': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        'gradient-warning': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-        'gradient-purple': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        'gradient-blue': 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
-        'gradient-green': 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-        'gradient-orange': 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+        // Instagram signature gradient
+        'ig-gradient': 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+        'ig-gradient-vibrant': 'linear-gradient(45deg, #FCAF45 0%, #F77737 25%, #E1306C 50%, #C13584 75%, #833AB4 100%)',
+        'ig-gradient-subtle': 'linear-gradient(135deg, #833AB4 0%, #E1306C 50%, #F77737 100%)',
+        'ig-stories-gradient': 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+        // Utility gradients
+        'gradient-dark': 'linear-gradient(180deg, #000000 0%, #121212 100%)',
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-out',
-        'slide-up': 'slideUp 0.4s ease-out',
-        'slide-down': 'slideDown 0.4s ease-out',
-        'scale-in': 'scaleIn 0.3s ease-out',
-        'bounce-subtle': 'bounceSubtle 0.6s ease-in-out',
-        'pulse-subtle': 'pulseSubtle 2s ease-in-out infinite',
+        'fade-in': 'fadeIn 0.3s ease-out',
+        'slide-up': 'slideUp 0.3s ease-out',
+        'slide-in-bottom': 'slideInBottom 0.25s ease-out',
+        'scale-in': 'scaleIn 0.2s ease-out',
+        'pulse-heart': 'pulseHeart 0.3s ease-in-out',
+        'stories-spin': 'storiesSpin 1.5s linear infinite',
+        'shimmer': 'shimmer 1.5s infinite',
       },
       keyframes: {
         fadeIn: {
@@ -68,35 +72,44 @@ const config: Config = {
           '100%': { opacity: '1' },
         },
         slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
-        slideDown: {
-          '0%': { transform: 'translateY(-20px)', opacity: '0' },
+        slideInBottom: {
+          '0%': { transform: 'translateY(100%)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
-        bounceSubtle: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-5px)' },
+        pulseHeart: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.2)' },
         },
-        pulseSubtle: {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.8' },
+        storiesSpin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
         },
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'medium': '0 4px 20px -2px rgba(0, 0, 0, 0.1), 0 10px 25px -5px rgba(0, 0, 0, 0.1)',
-        'large': '0 10px 40px -5px rgba(0, 0, 0, 0.15), 0 20px 50px -10px rgba(0, 0, 0, 0.15)',
-        'glow': '0 0 20px rgba(99, 102, 241, 0.4)',
-        'glow-sm': '0 0 10px rgba(99, 102, 241, 0.3)',
+        'ig': '0 1px 2px rgba(0, 0, 0, 0.1)',
+        'ig-md': '0 4px 12px rgba(0, 0, 0, 0.15)',
+        'ig-lg': '0 8px 24px rgba(0, 0, 0, 0.2)',
+        'ig-glow': '0 0 20px rgba(225, 48, 108, 0.3)',
       },
-      backdropBlur: {
-        xs: '2px',
+      borderRadius: {
+        'ig': '8px',
+        'ig-lg': '12px',
+        'ig-xl': '16px',
+        'ig-2xl': '24px',
+      },
+      fontFamily: {
+        'ig': ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
       },
     },
   },

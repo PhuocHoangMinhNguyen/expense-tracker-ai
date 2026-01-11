@@ -1,7 +1,6 @@
 'use client';
 
 import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { ExpenseForm } from '@/components/expenses/ExpenseForm';
 import { useExpenseContext } from '@/contexts/ExpenseContext';
 
@@ -9,19 +8,20 @@ export default function NewExpensePage() {
   const { addExpense } = useExpenseContext();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-ig-black pb-20 md:pb-0">
       <Header />
 
-      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-        <div className="mb-10 animate-fade-in">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent mb-3">Add Expense</h1>
-          <p className="text-gray-400 text-lg">Record a new expense with AI-powered categorization</p>
+      <main className="max-w-[935px] mx-auto">
+        {/* Page Header */}
+        <div className="px-4 py-4 border-b border-ig-border">
+          <h1 className="text-xl font-semibold text-ig-text">New Expense</h1>
+          <p className="text-sm text-ig-text-secondary">
+            AI will help categorize your expense
+          </p>
         </div>
 
         <ExpenseForm onSubmit={addExpense} />
       </main>
-
-      <Footer />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { Expense, ExpenseCategory } from '@/types';
+import { Expense } from '@/types';
 import { loadExpenses, saveExpenses } from '@/lib/storage/localStorage';
 
 interface ExpenseContextType {

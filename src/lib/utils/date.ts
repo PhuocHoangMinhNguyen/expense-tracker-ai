@@ -1,4 +1,4 @@
-import { format, parseISO, startOfMonth, endOfMonth, subDays, isWithinInterval } from 'date-fns';
+import { format, parseISO, startOfMonth, endOfMonth, subDays, isWithinInterval, formatDistanceToNow } from 'date-fns';
 
 export function formatDate(date: Date | string): string {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
@@ -65,4 +65,9 @@ export function toISODateString(date: Date): string {
 
 export function fromISODateString(dateString: string): Date {
   return parseISO(dateString);
+}
+
+export function formatRelativeDate(date: Date | string): string {
+  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  return formatDistanceToNow(dateObj, { addSuffix: true });
 }

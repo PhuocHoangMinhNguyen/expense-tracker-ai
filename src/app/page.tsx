@@ -1,263 +1,202 @@
 'use client';
 
+import { useState } from 'react';
+import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { Card, CardHeader } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Loading } from '@/components/ui/Loading';
+import { CategoryStories } from '@/components/dashboard/CategoryStories';
+import { ExpenseCard } from '@/components/expenses/ExpenseCard';
 import { useExpenses } from '@/hooks/useExpenses';
 import { formatCurrency } from '@/lib/utils/currency';
-import { formatDate } from '@/lib/utils/date';
-import { CATEGORY_COLORS, CATEGORY_ICONS } from '@/lib/constants/categories';
-import Link from 'next/link';
+import { CATEGORY_COLORS, CATEGORY_ICONS, EXPENSE_CATEGORIES } from '@/lib/constants/categories';
+import { ExpenseCategory } from '@/types';
 
 export default function DashboardPage() {
-  const { expenses, stats, categoryTotals, recentExpenses, isLoading } = useExpenses();
+  const { expenses, stats, categoryTotals, recentExpenses, isLoading, deleteExpense } = useExpenses();
+  const [selectedCategory, setSelectedCategory] = useState<ExpenseCategory | 'All'>('All');
+
+  // Calculate category counts
+  const categoryCounts = EXPENSE_CATEGORIES.reduce((acc, cat) => {
+    acc[cat] = expenses.filter(e => e.category === cat).length;
+    return acc;
+  }, {} as Record<ExpenseCategory, number>);
+
+  // Filter expenses by selected category
+  const filteredExpenses = selectedCategory === 'All'
+    ? recentExpenses
+    : recentExpenses.filter(e => e.category === selectedCategory);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen bg-ig-black">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <Loading size="lg" text="Loading your expenses..." />
+        <main className="flex items-center justify-center h-[60vh]">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-10 h-10 border-2 border-ig-text border-t-transparent rounded-full animate-spin" />
+            <p className="text-ig-text-secondary text-sm">Loading your expenses...</p>
+          </div>
         </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-ig-black pb-20 md:pb-0">
       <Header />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-        {/* Welcome Section */}
-        <div className="mb-10 animate-fade-in">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent mb-3">
-            Financial Dashboard
-          </h1>
-          <p className="text-gray-400 text-lg">
-            AI-powered insights for smarter spending decisions
-          </p>
-        </div>
+      <main className="max-w-[935px] mx-auto">
+        {/* Category Stories */}
+        <CategoryStories
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          categoryCounts={categoryCounts}
+        />
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {/* Total Spending Card */}
-          <div className="group relative overflow-hidden rounded-2xl animate-scale-in" style={{ animationDelay: '0ms' }}>
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-cyan-700 opacity-90 group-hover:opacity-100 transition-opacity" />
-            <div className="absolute inset-0 bg-gradient-radial from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative p-6 text-white">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <span className="text-3xl">💰</span>
-                </div>
-                <div className="text-sm font-semibold bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                  Total
+        {/* Stats Section - Instagram style insights */}
+        <div className="px-4 py-6 border-b border-ig-border">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Total */}
+            <div className="bg-ig-card rounded-ig-xl p-4 border border-ig-border">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-gradient-pink/20 flex items-center justify-center">
+                  <span className="text-lg">💰</span>
                 </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-sm text-white/80 font-medium">Total Spending</p>
-                <p className="text-3xl font-bold">{formatCurrency(stats.totalSpending)}</p>
-                <p className="text-xs text-white/70 flex items-center gap-1">
-                  <span>📊</span> {stats.transactionCount} transactions
-                </p>
-              </div>
+              <p className="text-xl font-bold text-ig-text">{formatCurrency(stats.totalSpending)}</p>
+              <p className="text-xs text-ig-text-secondary">Total spending</p>
             </div>
-          </div>
 
-          {/* Monthly Spending Card */}
-          <div className="group relative overflow-hidden rounded-2xl animate-scale-in" style={{ animationDelay: '100ms' }}>
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-teal-700 opacity-90 group-hover:opacity-100 transition-opacity" />
-            <div className="absolute inset-0 bg-gradient-radial from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative p-6 text-white">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <span className="text-3xl">📅</span>
-                </div>
-                <div className="text-sm font-semibold bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                  This Month
+            {/* This Month */}
+            <div className="bg-ig-card rounded-ig-xl p-4 border border-ig-border">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-action-blue/20 flex items-center justify-center">
+                  <span className="text-lg">📅</span>
                 </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-sm text-white/80 font-medium">Monthly Spending</p>
-                <p className="text-3xl font-bold">{formatCurrency(stats.monthlySpending)}</p>
-                <p className="text-xs text-white/70 flex items-center gap-1">
-                  <span>📈</span> Current billing period
-                </p>
-              </div>
+              <p className="text-xl font-bold text-ig-text">{formatCurrency(stats.monthlySpending)}</p>
+              <p className="text-xs text-ig-text-secondary">This month</p>
             </div>
-          </div>
 
-          {/* Average Daily Card */}
-          <div className="group relative overflow-hidden rounded-2xl animate-scale-in" style={{ animationDelay: '200ms' }}>
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-700 opacity-90 group-hover:opacity-100 transition-opacity" />
-            <div className="absolute inset-0 bg-gradient-radial from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative p-6 text-white">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <span className="text-3xl">📊</span>
-                </div>
-                <div className="text-sm font-semibold bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                  Average
+            {/* Daily Average */}
+            <div className="bg-ig-card rounded-ig-xl p-4 border border-ig-border">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-gradient-purple/20 flex items-center justify-center">
+                  <span className="text-lg">📊</span>
                 </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-sm text-white/80 font-medium">Daily Average</p>
-                <p className="text-3xl font-bold">{formatCurrency(stats.averageDaily)}</p>
-                <p className="text-xs text-white/70 flex items-center gap-1">
-                  <span>📉</span> Per day spending
-                </p>
-              </div>
+              <p className="text-xl font-bold text-ig-text">{formatCurrency(stats.averageDaily)}</p>
+              <p className="text-xs text-ig-text-secondary">Daily average</p>
             </div>
-          </div>
 
-          {/* Top Category Card */}
-          <div className="group relative overflow-hidden rounded-2xl animate-scale-in" style={{ animationDelay: '300ms' }}>
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-600 to-orange-700 opacity-90 group-hover:opacity-100 transition-opacity" />
-            <div className="absolute inset-0 bg-gradient-radial from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative p-6 text-white">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <span className="text-3xl">🏆</span>
-                </div>
-                <div className="text-sm font-semibold bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                  Top
+            {/* Top Category */}
+            <div className="bg-ig-card rounded-ig-xl p-4 border border-ig-border">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-gradient-orange/20 flex items-center justify-center">
+                  <span className="text-lg">
+                    {stats.topCategory ? CATEGORY_ICONS[stats.topCategory.category] : '🏆'}
+                  </span>
                 </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-sm text-white/80 font-medium">Top Category</p>
-                <p className="text-3xl font-bold">
-                  {stats.topCategory ? stats.topCategory.category : 'N/A'}
-                </p>
-                <p className="text-xs text-white/70 flex items-center gap-1">
-                  <span>💎</span>
-                  {stats.topCategory ? `${stats.topCategory.percentage.toFixed(0)}% of spending` : 'No data'}
-                </p>
-              </div>
+              <p className="text-xl font-bold text-ig-text">
+                {stats.topCategory ? stats.topCategory.category : 'N/A'}
+              </p>
+              <p className="text-xs text-ig-text-secondary">
+                {stats.topCategory ? `${stats.topCategory.percentage.toFixed(0)}% of total` : 'Top category'}
+              </p>
             </div>
           </div>
         </div>
 
         {/* Empty State */}
         {expenses.length === 0 && (
-          <Card className="text-center py-16 animate-fade-in">
-            <div className="w-32 h-32 bg-gradient-to-br from-primary-600/20 to-primary-700/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
-              <span className="text-6xl">💸</span>
+          <div className="flex flex-col items-center justify-center py-20 px-4">
+            <div className="ig-story-ring p-[3px] mb-6">
+              <div className="bg-ig-black rounded-full p-[3px]">
+                <div className="w-24 h-24 rounded-full bg-ig-card flex items-center justify-center">
+                  <span className="text-5xl">💸</span>
+                </div>
+              </div>
             </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-3">
-              Start Your Financial Journey
-            </h3>
-            <p className="text-gray-400 mb-8 text-lg max-w-md mx-auto">
-              Track your expenses with AI-powered categorization and get intelligent insights
+            <h2 className="text-xl font-semibold text-ig-text mb-2">
+              Start Tracking Expenses
+            </h2>
+            <p className="text-ig-text-secondary text-center mb-6 max-w-xs">
+              Add your first expense and let AI categorize it for you
             </p>
             <Link href="/expenses/new">
-              <Button variant="primary" size="lg" className="shadow-xl shadow-primary-500/20">
-                Add Your First Expense
-              </Button>
+              <button className="ig-btn-primary">Add Your First Expense</button>
             </Link>
-          </Card>
+          </div>
         )}
 
-        {expenses.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up">
-            {/* Category Breakdown */}
-            <Card hover>
-              <CardHeader title="Spending by Category" />
-              <div className="space-y-4">
-                {categoryTotals.slice(0, 6).map((cat, index) => (
-                  <div key={cat.category} className="animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-                          style={{ backgroundColor: CATEGORY_COLORS[cat.category] + '30' }}
-                        >
-                          <span className="text-2xl">{CATEGORY_ICONS[cat.category]}</span>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-100">{cat.category}</p>
-                          <p className="text-xs text-gray-500">{cat.count} transaction{cat.count !== 1 ? 's' : ''}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-gray-100">{formatCurrency(cat.total)}</p>
-                        <p className="text-xs text-gray-500">{cat.percentage.toFixed(1)}%</p>
-                      </div>
+        {/* Category Breakdown - Instagram Insights style */}
+        {expenses.length > 0 && categoryTotals.length > 0 && (
+          <div className="px-4 py-6 border-b border-ig-border">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-semibold text-ig-text">Spending Breakdown</h2>
+              <span className="text-sm text-ig-text-secondary">{stats.transactionCount} transactions</span>
+            </div>
+
+            <div className="space-y-3">
+              {categoryTotals.slice(0, 5).map((cat) => (
+                <div key={cat.category} className="flex items-center gap-3">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${CATEGORY_COLORS[cat.category]}30` }}
+                  >
+                    <span className="text-lg">{CATEGORY_ICONS[cat.category]}</span>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium text-ig-text">{cat.category}</span>
+                      <span className="text-sm font-semibold text-ig-text">{formatCurrency(cat.total)}</span>
                     </div>
-                    <div className="w-full bg-slate-900/50 rounded-full h-2.5 overflow-hidden border border-slate-700/50">
+                    <div className="w-full h-1.5 bg-ig-surface rounded-full overflow-hidden">
                       <div
-                        className="h-2.5 rounded-full transition-all duration-500 ease-out shadow-lg"
+                        className="h-full rounded-full transition-all duration-500"
                         style={{
                           width: `${cat.percentage}%`,
-                          background: `linear-gradient(90deg, ${CATEGORY_COLORS[cat.category]}, ${CATEGORY_COLORS[cat.category]}dd)`,
+                          backgroundColor: CATEGORY_COLORS[cat.category],
                         }}
                       />
                     </div>
                   </div>
-                ))}
-              </div>
-            </Card>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-            {/* Recent Expenses */}
-            <Card hover>
-              <CardHeader
-                title="Recent Transactions"
-                action={
-                  <Link href="/expenses">
-                    <Button variant="ghost" size="sm">
-                      View All →
-                    </Button>
-                  </Link>
-                }
-              />
-              <div className="space-y-3">
-                {recentExpenses.map((expense, index) => (
-                  <Link href={`/expenses/${expense.id}/edit`} key={expense.id}>
-                    <div
-                      className="flex items-center justify-between p-4 bg-slate-900/30 border border-slate-700/30 rounded-xl hover:bg-slate-800/50 hover:border-primary-500/30 transition-all duration-200 cursor-pointer group animate-fade-in"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform"
-                          style={{ backgroundColor: CATEGORY_COLORS[expense.category] + '40' }}
-                        >
-                          <span className="text-2xl">{CATEGORY_ICONS[expense.category]}</span>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-100 group-hover:text-primary-400 transition-colors">
-                            {expense.description}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <p className="text-sm text-gray-500">{formatDate(expense.date)}</p>
-                            {expense.aiCategorized && (
-                              <span className="text-xs bg-gradient-to-r from-primary-600 to-primary-700 text-white px-2 py-0.5 rounded-full flex items-center gap-1">
-                                🤖 <span>AI</span>
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-lg text-gray-100">
-                          {formatCurrency(expense.amount)}
-                        </p>
-                        <p className="text-xs text-gray-500">{expense.category}</p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+        {/* Recent Expenses Feed */}
+        {expenses.length > 0 && (
+          <div className="py-4">
+            <div className="flex items-center justify-between px-4 mb-4">
+              <h2 className="text-base font-semibold text-ig-text">Recent Activity</h2>
+              <Link href="/expenses" className="text-sm font-semibold text-action-blue">
+                See All
+              </Link>
+            </div>
 
-                {recentExpenses.length === 0 && (
-                  <p className="text-center text-gray-500 py-8">No recent expenses</p>
-                )}
-              </div>
-            </Card>
+            <div className="space-y-4">
+              {filteredExpenses.slice(0, 5).map((expense) => (
+                <ExpenseCard
+                  key={expense.id}
+                  expense={expense}
+                  onDelete={deleteExpense}
+                />
+              ))}
+
+              {filteredExpenses.length === 0 && selectedCategory !== 'All' && (
+                <div className="text-center py-12 px-4">
+                  <p className="text-ig-text-secondary">
+                    No expenses in {selectedCategory}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>
-
-      <Footer />
     </div>
   );
 }

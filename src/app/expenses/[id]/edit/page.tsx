@@ -2,10 +2,9 @@
 
 import { use } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { ExpenseForm } from '@/components/expenses/ExpenseForm';
-import { Loading } from '@/components/ui/Loading';
 import { useExpenseContext } from '@/contexts/ExpenseContext';
 
 export default function EditExpensePage({ params }: { params: Promise<{ id: string }> }) {
@@ -17,10 +16,13 @@ export default function EditExpensePage({ params }: { params: Promise<{ id: stri
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen bg-ig-black">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <Loading size="lg" text="Loading expense..." />
+        <main className="flex items-center justify-center h-[60vh]">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-10 h-10 border-2 border-ig-text border-t-transparent rounded-full animate-spin" />
+            <p className="text-ig-text-secondary text-sm">Loading expense...</p>
+          </div>
         </main>
       </div>
     );
@@ -28,24 +30,24 @@ export default function EditExpensePage({ params }: { params: Promise<{ id: stri
 
   if (!expense) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen bg-ig-black pb-20 md:pb-0">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center animate-fade-in">
-            <div className="w-24 h-24 bg-gradient-to-br from-red-600/20 to-red-700/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
-              <span className="text-5xl">❌</span>
+        <main className="flex items-center justify-center h-[60vh]">
+          <div className="text-center px-4">
+            <div className="ig-story-ring p-[3px] mb-6 inline-block">
+              <div className="bg-ig-black rounded-full p-[3px]">
+                <div className="w-20 h-20 rounded-full bg-ig-card flex items-center justify-center">
+                  <span className="text-4xl">😕</span>
+                </div>
+              </div>
             </div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-3">Expense Not Found</h2>
-            <p className="text-gray-400 mb-8 text-lg">The expense you're looking for doesn't exist.</p>
-            <button
-              onClick={() => router.push('/expenses')}
-              className="text-primary-400 hover:text-primary-300 font-semibold transition-colors"
-            >
-              ← Back to Expenses
-            </button>
+            <h2 className="text-xl font-semibold text-ig-text mb-2">Expense Not Found</h2>
+            <p className="text-ig-text-secondary mb-6">The expense you are looking for does not exist.</p>
+            <Link href="/expenses" className="text-action-blue font-semibold">
+              Back to Expenses
+            </Link>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -56,19 +58,20 @@ export default function EditExpensePage({ params }: { params: Promise<{ id: stri
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-ig-black pb-20 md:pb-0">
       <Header />
 
-      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-        <div className="mb-10 animate-fade-in">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent mb-3">Edit Expense</h1>
-          <p className="text-gray-400 text-lg">Update your expense details</p>
+      <main className="max-w-[935px] mx-auto">
+        {/* Page Header */}
+        <div className="px-4 py-4 border-b border-ig-border">
+          <h1 className="text-xl font-semibold text-ig-text">Edit Expense</h1>
+          <p className="text-sm text-ig-text-secondary">
+            Update your expense details
+          </p>
         </div>
 
         <ExpenseForm expense={expense} onSubmit={handleUpdate} />
       </main>
-
-      <Footer />
     </div>
   );
 }
