@@ -5,6 +5,7 @@ export interface CardProps {
   className?: string;
   padding?: 'none' | 'sm' | 'md' | 'lg';
   hover?: boolean;
+  gradient?: boolean;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -12,19 +13,26 @@ export const Card: React.FC<CardProps> = ({
   className = '',
   padding = 'md',
   hover = false,
+  gradient = false,
 }) => {
   const paddingStyles = {
     none: '',
-    sm: 'p-3',
-    md: 'p-4 sm:p-6',
-    lg: 'p-6 sm:p-8',
+    sm: 'p-4',
+    md: 'p-6',
+    lg: 'p-8',
   };
 
-  const hoverStyles = hover ? 'hover:shadow-lg transition-shadow duration-200' : '';
+  const hoverStyles = hover
+    ? 'hover:shadow-2xl hover:shadow-primary-500/10 hover:-translate-y-1 hover:border-slate-600/50 transition-all duration-300'
+    : '';
+
+  const baseStyles = gradient
+    ? 'glass-dark border border-slate-700/50 shadow-xl'
+    : 'bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 shadow-xl';
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md border border-gray-200 ${paddingStyles[padding]} ${hoverStyles} ${className}`}
+      className={`rounded-2xl ${baseStyles} ${paddingStyles[padding]} ${hoverStyles} ${className}`}
     >
       {children}
     </div>
@@ -45,10 +53,12 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`flex items-center justify-between mb-4 ${className}`}>
+    <div className={`flex items-center justify-between mb-6 ${className}`}>
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
+        <h3 className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          {title}
+        </h3>
+        {subtitle && <p className="text-sm text-gray-400 mt-1">{subtitle}</p>}
       </div>
       {action && <div>{action}</div>}
     </div>
@@ -70,5 +80,7 @@ export interface CardFooterProps {
 }
 
 export const CardFooter: React.FC<CardFooterProps> = ({ children, className = '' }) => {
-  return <div className={`mt-4 pt-4 border-t border-gray-200 ${className}`}>{children}</div>;
+  return (
+    <div className={`mt-6 pt-6 border-t border-slate-700/50 ${className}`}>{children}</div>
+  );
 };

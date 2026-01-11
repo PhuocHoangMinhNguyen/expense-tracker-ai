@@ -28,17 +28,20 @@ export default function EditExpensePage({ params }: { params: Promise<{ id: stri
 
   if (!expense) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Expense Not Found</h2>
-            <p className="text-gray-600 mb-6">The expense you're looking for doesn't exist.</p>
+          <div className="text-center animate-fade-in">
+            <div className="w-24 h-24 bg-gradient-to-br from-red-600/20 to-red-700/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+              <span className="text-5xl">❌</span>
+            </div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-3">Expense Not Found</h2>
+            <p className="text-gray-400 mb-8 text-lg">The expense you're looking for doesn't exist.</p>
             <button
               onClick={() => router.push('/expenses')}
-              className="text-primary-600 hover:text-primary-700"
+              className="text-primary-400 hover:text-primary-300 font-semibold transition-colors"
             >
-              Back to Expenses
+              ← Back to Expenses
             </button>
           </div>
         </main>
@@ -53,13 +56,13 @@ export default function EditExpensePage({ params }: { params: Promise<{ id: stri
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Expense</h1>
-          <p className="text-gray-600">Update your expense details</p>
+      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div className="mb-10 animate-fade-in">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent mb-3">Edit Expense</h1>
+          <p className="text-gray-400 text-lg">Update your expense details</p>
         </div>
 
         <ExpenseForm expense={expense} onSubmit={handleUpdate} />

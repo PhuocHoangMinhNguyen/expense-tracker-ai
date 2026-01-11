@@ -21,23 +21,25 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+      'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-soft';
 
     const variantStyles = {
       primary:
-        'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 active:bg-primary-800',
+        'bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 focus:ring-primary-500 active:scale-95 shadow-medium hover:shadow-glow',
       secondary:
-        'bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-500 active:bg-secondary-800',
-      danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 active:bg-red-800',
+        'bg-gradient-to-r from-secondary-600 to-secondary-700 text-white hover:from-secondary-700 hover:to-secondary-800 focus:ring-secondary-500 active:scale-95 shadow-medium',
+      danger:
+        'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-500 active:scale-95 shadow-medium',
       outline:
-        'border-2 border-primary-600 text-primary-600 hover:bg-primary-50 focus:ring-primary-500',
-      ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500',
+        'border-2 border-primary-500 text-primary-700 hover:bg-primary-50 focus:ring-primary-500 bg-white/80 backdrop-blur-sm active:scale-95',
+      ghost:
+        'text-gray-700 hover:bg-gray-100/80 focus:ring-gray-400 backdrop-blur-sm active:scale-95',
     };
 
     const sizeStyles = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-base',
-      lg: 'px-6 py-3 text-lg',
+      sm: 'px-4 py-2 text-sm',
+      md: 'px-5 py-2.5 text-base',
+      lg: 'px-7 py-3.5 text-lg',
     };
 
     return (

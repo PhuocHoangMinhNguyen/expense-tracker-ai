@@ -16,7 +16,7 @@ export const Loading: React.FC<LoadingProps> = ({ size = 'md', text, fullScreen 
   const spinner = (
     <div className="flex flex-col items-center justify-center gap-3">
       <svg
-        className={`animate-spin text-primary-600 ${sizeStyles[size]}`}
+        className={`animate-spin text-primary-500 ${sizeStyles[size]}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -35,13 +35,13 @@ export const Loading: React.FC<LoadingProps> = ({ size = 'md', text, fullScreen 
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         />
       </svg>
-      {text && <p className="text-gray-600 text-sm">{text}</p>}
+      {text && <p className="text-gray-400 font-medium">{text}</p>}
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 z-50">
+      <div className="fixed inset-0 flex items-center justify-center bg-slate-950 bg-opacity-90 backdrop-blur-sm z-50">
         {spinner}
       </div>
     );
@@ -51,16 +51,16 @@ export const Loading: React.FC<LoadingProps> = ({ size = 'md', text, fullScreen 
 };
 
 export const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
-  return <div className={`animate-pulse bg-gray-200 rounded ${className}`} />;
+  return <div className={`animate-pulse bg-slate-700/50 rounded ${className}`} />;
 };
 
 export const SkeletonCard: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 animate-pulse">
-      <div className="h-4 bg-gray-200 rounded w-1/4 mb-4" />
+    <div className="bg-slate-800/50 rounded-xl shadow-xl border border-slate-700/50 p-6 animate-pulse">
+      <div className="h-4 bg-slate-700/50 rounded w-1/4 mb-4" />
       <div className="space-y-3">
-        <div className="h-3 bg-gray-200 rounded" />
-        <div className="h-3 bg-gray-200 rounded w-5/6" />
+        <div className="h-3 bg-slate-700/50 rounded" />
+        <div className="h-3 bg-slate-700/50 rounded w-5/6" />
       </div>
     </div>
   );

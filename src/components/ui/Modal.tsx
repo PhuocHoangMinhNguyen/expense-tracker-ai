@@ -54,22 +54,22 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
-          className={`relative bg-white rounded-lg shadow-xl w-full ${sizeStyles[size]} animate-slide-up`}
+          className={`relative bg-slate-800 border border-slate-700/50 rounded-2xl shadow-2xl w-full ${sizeStyles[size]} animate-scale-in`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+          <div className="flex items-center justify-between p-6 border-b border-slate-700/50">
+            <h2 className="text-2xl font-bold text-gray-100">{title}</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-gray-400 hover:text-gray-300 transition-colors p-1 hover:bg-slate-700/50 rounded-lg"
             >
               <svg
                 className="w-6 h-6"
@@ -91,7 +91,7 @@ export const Modal: React.FC<ModalProps> = ({
           <div className="p-6">{children}</div>
 
           {/* Footer */}
-          {footer && <div className="p-6 border-t border-gray-200">{footer}</div>}
+          {footer && <div className="p-6 border-t border-slate-700/50">{footer}</div>}
         </div>
       </div>
     </div>
@@ -138,7 +138,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         </div>
       }
     >
-      <p className="text-gray-700">{message}</p>
+      <p className="text-gray-300 text-lg">{message}</p>
     </Modal>
   );
 };

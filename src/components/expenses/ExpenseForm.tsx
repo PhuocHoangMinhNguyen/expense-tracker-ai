@@ -115,8 +115,8 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Card>
-        <div className="space-y-5">
+      <Card className="animate-fade-in">
+        <div className="space-y-6">
           {/* Date Input */}
           <div>
             <Input
@@ -186,21 +186,41 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
 
           {/* AI Suggestion */}
           {aiSuggestion && !errors.description && (
-            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">🤖</span>
-                <div>
-                  <p className="text-sm font-medium text-gray-900">
-                    AI suggests: <span className="text-primary-700">{aiSuggestion.category}</span>
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    Confidence: {Math.round(aiSuggestion.confidence * 100)}%
-                  </p>
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600/20 to-purple-600/20 border-2 border-primary-500/30 p-5 animate-scale-in backdrop-blur-sm">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-500 to-purple-600 opacity-20 rounded-full blur-3xl" />
+              <div className="relative flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 flex-1">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <span className="text-2xl">🤖</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-bold text-gray-100 mb-1.5 flex items-center gap-2">
+                      <span>AI Suggestion:</span>
+                      <span className="text-primary-400">{aiSuggestion.category}</span>
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-2 bg-slate-800/50 rounded-full overflow-hidden max-w-[140px] border border-slate-700/50">
+                        <div
+                          className="h-full bg-gradient-to-r from-primary-500 to-purple-500 rounded-full transition-all duration-500 shadow-lg"
+                          style={{ width: `${aiSuggestion.confidence * 100}%` }}
+                        />
+                      </div>
+                      <p className="text-xs font-semibold text-gray-300 flex items-center gap-1">
+                        <span>{Math.round(aiSuggestion.confidence * 100)}%</span>
+                        <span className="text-gray-500">confident</span>
+                      </p>
+                    </div>
+                  </div>
                 </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={applySuggestion}
+                  className="shadow-lg flex-shrink-0"
+                >
+                  Apply
+                </Button>
               </div>
-              <Button type="button" size="sm" onClick={applySuggestion}>
-                Apply
-              </Button>
             </div>
           )}
 
@@ -224,9 +244,9 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
               required
             />
             {isLoadingAI && (
-              <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+              <div className="mt-2 flex items-center gap-2 text-sm text-gray-400">
                 <svg
-                  className="animate-spin h-3 w-3"
+                  className="animate-spin h-4 w-4 text-primary-500"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -245,14 +265,15 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                Getting AI suggestion...
-              </p>
+                <span className="font-medium">AI is analyzing...</span>
+              </div>
             )}
           </div>
 
           {/* Submit Error */}
           {errors.submit && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div className="bg-red-500/10 border-2 border-red-500/50 text-red-400 px-4 py-3 rounded-xl font-medium flex items-center gap-2">
+              <span>⚠</span>
               {errors.submit}
             </div>
           )}
@@ -264,7 +285,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
         <Button type="button" variant="ghost" onClick={handleCancel} disabled={isSubmitting}>
           Cancel
         </Button>
-        <Button type="submit" variant="primary" isLoading={isSubmitting}>
+        <Button type="submit" variant="primary" isLoading={isSubmitting} className="min-w-[160px]">
           {expense ? 'Update Expense' : 'Add Expense'}
         </Button>
       </div>
