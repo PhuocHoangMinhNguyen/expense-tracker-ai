@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { CategoryStories } from '@/components/dashboard/CategoryStories';
 import { ExpenseCard } from '@/components/expenses/ExpenseCard';
+import { ExportModal } from '@/components/export/ExportModal';
 import { useExpenses } from '@/hooks/useExpenses';
 import { formatCurrency } from '@/lib/utils/currency';
 import { CATEGORY_COLORS, CATEGORY_ICONS, EXPENSE_CATEGORIES } from '@/lib/constants/categories';
@@ -13,6 +14,7 @@ import { ExpenseCategory } from '@/types';
 export default function DashboardPage() {
   const { expenses, stats, categoryTotals, recentExpenses, isLoading, deleteExpense } = useExpenses();
   const [selectedCategory, setSelectedCategory] = useState<ExpenseCategory | 'All'>('All');
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Calculate category counts
   const categoryCounts = EXPENSE_CATEGORIES.reduce((acc, cat) => {
@@ -104,6 +106,23 @@ export default function DashboardPage() {
               </p>
             </div>
           </div>
+
+          {/* Export Button */}
+          {expenses.length > 0 && (
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setIsExportModalOpen(true)}
+                className="px-4 py-2 bg-ig-surface text-ig-text text-sm font-medium rounded-lg border border-ig-border hover:bg-ig-border transition-colors flex items-center gap-2"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export Data
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Empty State */}
@@ -197,6 +216,13 @@ export default function DashboardPage() {
           </div>
         )}
       </main>
+
+      {/* Export Modal */}
+      <ExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        expenses={expenses}
+      />
     </div>
   );
 }
