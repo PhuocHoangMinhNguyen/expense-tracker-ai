@@ -7,6 +7,7 @@ import { CategoryStories } from '@/components/dashboard/CategoryStories';
 import { ExpenseCard } from '@/components/expenses/ExpenseCard';
 import { useExpenses } from '@/hooks/useExpenses';
 import { formatCurrency } from '@/lib/utils/currency';
+import { exportToCSV } from '@/lib/utils/export';
 import { CATEGORY_COLORS, CATEGORY_ICONS, EXPENSE_CATEGORIES } from '@/lib/constants/categories';
 import { ExpenseCategory } from '@/types';
 
@@ -104,6 +105,18 @@ export default function DashboardPage() {
               </p>
             </div>
           </div>
+
+          {/* Export Button */}
+          {expenses.length > 0 && (
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => exportToCSV(expenses)}
+                className="px-4 py-2 bg-ig-surface text-ig-text text-sm font-medium rounded-lg border border-ig-border hover:bg-ig-border transition-colors"
+              >
+                Export Data
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Empty State */}
